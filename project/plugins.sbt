@@ -1,6 +1,10 @@
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.3")
+resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
 
+// The Play plugin
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.3")
+addSbtPlugin("com.typesafe.sbt" % "sbt-play-ebean" % "2.0.0")
 // Play enhancer - this automatically generates getters/setters for public fields
 // and rewrites accessors of these fields to use the getters/setters. Remove this
 // plugin if you prefer not to have this feature, or disable on a per project
