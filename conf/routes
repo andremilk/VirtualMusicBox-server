@@ -6,5 +6,8 @@ GET     /                           controllers.Application.index()
 
 POST    /new/playlist               controllers.Application.createNewPlaylist(name: String)
 
+
 GET     /playlist/:id/musics        controllers.Application.getMusics(id: Long)
+PUT     /playlist/:id/music/:id_music        controllers.Application.voteMusic(id: Long, id_music: Long)
+
 POST /new/playlist/:id/music            controllers.Application.addMusicToPlaylist(id: Long, name: String)

@@ -37,6 +37,18 @@ public class Application extends Controller {
         return UniqueIdentifier.resolveIdentifier(UUID) - LONG_KEY;
     }
 
+    @Transactional
+    public Result voteMusic(long id, long id_music) {
+        long playlistID = id;
+        Playlist p = getPlaylistById(id);
+        List<Music> _m = dao.findByAttributeName("Music", "id", Long.toString(id_music));
+        Music m = _m.get(0);
+        int votes = p.getMusics().get(m);
+        p.getMusics().put(m, votes + 1);
+        dao.persist(p);
+        return ok(p.toString());
+    }
+
     public Result getMusics(long id) {
         return ok((Content) getPlaylistById(id));
 
