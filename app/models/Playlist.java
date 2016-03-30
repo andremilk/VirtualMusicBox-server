@@ -25,7 +25,7 @@ public class Playlist {
     @Column(name = "uuid")
     private String UUID;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name = "musics")
     private List<Music> musics;
 

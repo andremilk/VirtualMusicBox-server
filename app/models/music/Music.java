@@ -41,6 +41,9 @@ public class Music {
         this.source = source;
     }
 
+    public Music() {
+
+    }
     public Music(String name) {
         this.name = name;
     }
@@ -79,24 +82,12 @@ public class Music {
         this.id = id;
     }
 
-    @ManyToOne(optional = false)
-    private Playlist playlists;
-
-    public Playlist getPlaylists() {
-        return playlists;
-    }
-
-    public void setPlaylists(Playlist playlists) {
-        this.playlists = playlists;
-    }
-
-    @Override
+       @Override
     public String toString() {
         return "Music{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", source='" + source + '\'' +
-                ", playlists=" + playlists +
                 '}';
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.jukebox.core.UniqueIdentifier;
 import models.Playlist;
 import models.dao.GenericDAO;
+import play.Logger;
 import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -35,13 +36,19 @@ public class Application extends Controller {
         return UniqueIdentifier.resolveIdentifier(UUID) - LONG_KEY;
     }
 
+    public Result getMusics(long id) {
+        return ok((Content) getPlaylistById(id));
+
+    }
+
     @Transactional
     public Result addMusicToPlaylist(long id, String name) {
         long playlistID = id;
         Playlist p = getPlaylistById(id);
         p.addMusic(name);
+        Logger.debug(p.toString());
         dao.persist(p);
-        return created((Content) p);
+        return created(p.toString());
     }
 
     /**
@@ -81,6 +88,7 @@ public class Application extends Controller {
         dao.persist(newPlaylist);
         dao.flush();
         lastPlaylistID = newPlaylist.getId();
+        Logger.debug(newPlaylist.toString());
         return created(createQR(generateUUID(newPlaylist.getId())));
     }
 
