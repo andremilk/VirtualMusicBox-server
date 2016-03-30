@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.jukebox.core.UniqueIdentifier;
 import models.Playlist;
 import models.dao.GenericDAO;
+import models.music.Music;
 import play.Logger;
 import play.db.jpa.Transactional;
 import play.libs.Json;
@@ -45,7 +46,9 @@ public class Application extends Controller {
     public Result addMusicToPlaylist(long id, String name) {
         long playlistID = id;
         Playlist p = getPlaylistById(id);
-        p.addMusic(name);
+        Music m = new Music(name);
+        dao.persist(m);
+        p.addMusic(m);
         Logger.debug(p.toString());
         dao.persist(p);
         return created(p.toString());

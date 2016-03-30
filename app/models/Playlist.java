@@ -1,12 +1,12 @@
 package models;
 
-import com.jukebox.core.UniqueIdentifier;
 import models.music.Music;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dekozo on 3/30/16.
@@ -25,12 +25,12 @@ public class Playlist {
     @Column(name = "uuid")
     private String UUID;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name = "musics")
-    private List<Music> musics;
+
+    @ElementCollection
+    private Map<Music, Integer> musics;
 
     public Playlist() {
-        this.musics = new ArrayList<Music>();
+        this.musics = new HashMap<Music, Integer>();
     }
 
     public Playlist(String name) {
@@ -45,11 +45,11 @@ public class Playlist {
     }
 
     public void addMusic(String name) {
-        this.musics.add(new Music(name, "src"));
+        this.musics.put(new Music(name, "src"), 0);
     }
 
     public void addMusic(Music music) {
-        this.musics.add(music);
+        this.musics.put(music, 0);
     }
 
     public String getName() {
@@ -68,11 +68,11 @@ public class Playlist {
         this.UUID = UUID;
     }
 
-    public List<Music> getMusics() {
+    public Map<Music, Integer> getMusics() {
         return musics;
     }
 
-    public void setMusics(ArrayList<Music> musics) {
+    public void setMusics(Map<Music, Integer> musics) {
         this.musics = musics;
     }
 
