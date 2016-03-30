@@ -1,12 +1,9 @@
 package models.dao;
 
-import java.util.List;
+import play.db.jpa.JPA;
 
 import javax.persistence.Query;
-
-import com.avaje.ebean.annotation.Transactional;
-import play.Logger;
-import play.db.jpa.JPA;
+import java.util.List;
 
 /**
  * Camada genérica para acesso ao Banco de Dados

@@ -4,3 +4,4 @@
 
 GET     /                           controllers.Application.index()
 
+POST    /new/playlist               controllers.Application.createNewPlaylist(name: String)
