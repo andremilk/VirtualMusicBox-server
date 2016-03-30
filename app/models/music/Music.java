@@ -11,8 +11,8 @@ import javax.persistence.*;
 @Table(name = "MUSIC")
 public class Music {
 
-    @Id
-    private String id;
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long id;
     /**
      * String representation for the music on playlists.
      */
@@ -31,9 +31,18 @@ public class Music {
      /
     @Column(name = "strategy")
     private PlayingMusicStrategy strategy;
-*/
+
     public void playMusic() {
 
+    }
+*/
+    public Music(String name, String source) {
+        this.name = name;
+        this.source = source;
+    }
+
+    public Music(String name) {
+        this.name = name;
     }
 
     public String getName() {
@@ -62,11 +71,11 @@ public class Music {
 */
 
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -79,5 +88,15 @@ public class Music {
 
     public void setPlaylists(Playlist playlists) {
         this.playlists = playlists;
+    }
+
+    @Override
+    public String toString() {
+        return "Music{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", source='" + source + '\'' +
+                ", playlists=" + playlists +
+                '}';
     }
 }

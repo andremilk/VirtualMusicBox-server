@@ -25,7 +25,7 @@ public class Playlist {
     @Column(name = "uuid")
     private String UUID;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "musics")
     private List<Music> musics;
 
@@ -42,6 +42,14 @@ public class Playlist {
         this();
         this.name = name;
         this.UUID = UUID;
+    }
+
+    public void addMusic(String name) {
+        this.musics.add(new Music(name, "src"));
+    }
+
+    public void addMusic(Music music) {
+        this.musics.add(music);
     }
 
     public String getName() {
@@ -74,7 +82,19 @@ public class Playlist {
         return id;
     }
 
+
+
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Playlist{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", UUID='" + UUID + '\'' +
+                ", musics=" + musics +
+                '}';
     }
 }

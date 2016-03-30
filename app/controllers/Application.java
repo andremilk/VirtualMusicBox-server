@@ -2,18 +2,25 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jukebox.core.UniqueIdentifier;
-import models.dao.GenericDAO;
 import models.Playlist;
+import models.dao.GenericDAO;
+import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.twirl.api.Content;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+
 
 public class Application extends Controller {
     private static GenericDAO dao = new GenericDAO();
+    private static long LONG_KEY = 223344; // workaround
+    private long lastPlaylistID = 0;
+
 
 
     /**
@@ -21,7 +28,20 @@ public class Application extends Controller {
      * @return
      */
     public static String generateUUID(long id) {
-        return UniqueIdentifier.generateUniqueIdentifier(id);
+        return UniqueIdentifier.generateUniqueIdentifier(id + LONG_KEY);
+    }
+
+    public static long resolveUUID(String UUID) {
+        return UniqueIdentifier.resolveIdentifier(UUID) - LONG_KEY;
+    }
+
+    @Transactional
+    public Result addMusicToPlaylist(long id, String name) {
+        long playlistID = id;
+        Playlist p = getPlaylistById(id);
+        p.addMusic(name);
+        dao.persist(p);
+        return created((Content) p);
     }
 
     /**
@@ -56,11 +76,19 @@ public class Application extends Controller {
     @play.db.jpa.Transactional
     public Result createNewPlaylist(String name) {
         Playlist newPlaylist = new Playlist(name);
-        String UUID = generateUUID(newPlaylist.getId());
+        String UUID = generateUUID(lastPlaylistID + 1);
+        newPlaylist.setUUID(UUID);
         dao.persist(newPlaylist);
+        dao.flush();
+        lastPlaylistID = newPlaylist.getId();
         return created(createQR(generateUUID(newPlaylist.getId())));
     }
 
+    @Transactional
+    public static Playlist getPlaylistById(long id) {
+        List<Playlist> playlists = dao.findByAttributeName("Playlist", "id", Long.toString(id));
+        return playlists.get(0);
+    }
     public Result index() {
         final JsonNode jsonResponse = Json.toJson("Your new application is ready.");
         return ok(jsonResponse);

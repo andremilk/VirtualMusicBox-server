@@ -5,3 +5,5 @@
 GET     /                           controllers.Application.index()
 
 POST    /new/playlist               controllers.Application.createNewPlaylist(name: String)
+
+POST /new/playlist/:id/music            controllers.Application.addMusicToPlaylist(id: Long, name: String)
