@@ -3,9 +3,8 @@ package models;
 import models.music.Music;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -29,8 +28,12 @@ public class Playlist {
     @ElementCollection
     private Map<Music, Integer> musics;
 
+    @ElementCollection
+    private Map<Music, HashSet<User>> musicVoters;
+
     public Playlist() {
         this.musics = new HashMap<Music, Integer>();
+        this.musicVoters = new HashMap<Music, HashSet<User>>();
     }
 
     public Playlist(String name) {
@@ -76,13 +79,24 @@ public class Playlist {
         this.musics = musics;
     }
 
+    public Map<Music, HashSet<User>> getMusicVoters() {
+        return musicVoters;
+    }
 
+    public void setMusicVoters(Map<Music, HashSet<User>> musicVoters) {
+        this.musicVoters = musicVoters;
+    }
+
+    public void castVote(Music music, User user) {
+        if(this.getMusicVoters().get(music).contains(user))
+            return;
+        int votes = this.getMusics().get(music);
+        this.getMusics().put(music, votes++);
+    }
 
     public long getId() {
         return id;
     }
-
-
 
     public void setId(long id) {
         this.id = id;
