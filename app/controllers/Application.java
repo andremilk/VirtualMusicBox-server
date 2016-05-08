@@ -3,6 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.jukebox.core.UniqueIdentifier;
 import models.Playlist;
+import models.User;
 import models.dao.GenericDAO;
 import models.music.Music;
 import play.Logger;
@@ -38,13 +39,20 @@ public class Application extends Controller {
     }
 
     @Transactional
-    public Result voteMusic(long id, long id_music) {
+    public Result voteMusic(long id, long id_music, String user) {
         long playlistID = id;
         Playlist p = getPlaylistById(id);
         List<Music> _m = dao.findByAttributeName("Music", "id", Long.toString(id_music));
         Music m = _m.get(0);
-        int votes = p.getMusics().get(m);
-        p.getMusics().put(m, votes + 1);
+        try {
+            User votingUser = getUserByhandle(user);
+            dao.persist(votingUser);
+        } catch (Exception e) {
+            User votingUser = new User(user);
+            dao.persist(votingUser);
+        }
+        dao.persist(p);
+        p.castVote(m, getUserByhandle(user));
         dao.persist(p);
         return ok(p.toString());
     }
@@ -111,6 +119,17 @@ public class Application extends Controller {
     public static Playlist getPlaylistById(long id) {
         List<Playlist> playlists = dao.findByAttributeName("Playlist", "id", Long.toString(id));
         return playlists.get(0);
+    }
+
+    @Transactional
+    public static User getUserByhandle(String handle) {
+        List<User> users = dao.findByAttributeName("User", "handle", handle);
+        if(users.isEmpty()) {
+            User user = new User(handle);
+            dao.persist(user);
+            return user;
+        }
+        return users.get(0);
     }
     public Result index() {
         final JsonNode jsonResponse = Json.toJson("Your new application is ready.");
