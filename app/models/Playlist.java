@@ -53,6 +53,7 @@ public class Playlist {
 
     public void addMusic(Music music) {
         this.musics.put(music, 0);
+        this.musicVoters.put(music, new HashSet<User>());
     }
 
     public String getName() {
@@ -88,10 +89,13 @@ public class Playlist {
     }
 
     public void castVote(Music music, User user) {
-        if(this.getMusicVoters().get(music).contains(user))
-            return;
+        if(this.getMusicVoters().containsKey(music))
+            if (this.getMusicVoters().get(music).contains(user))
+                return;
         int votes = this.getMusics().get(music);
-        this.getMusics().put(music, votes++);
+        votes++;
+        this.getMusics().put(music, votes);
+        this.getMusicVoters().get(music).add(user);
     }
 
     public long getId() {
